@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text-to-Speech Tool</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .subscription {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Text-to-Speech Tool</h1>
+    </header>
+
+    <main>
+        <label for="textArea">Enter Text:</label>
+        <textarea id="textArea" placeholder="Enter your text here"></textarea>
+        
+        <label for="voices">Select Voice:</label>
+        <select id="voices">
+            <optgroup label="Women's Voices">
+                <option value="en-IN">English (India) Female</option>
+                <option value="hi-IN">Hindi Female</option>
+            </optgroup>
+            <optgroup label="Men's Voices">
+                <option value="en-IN">English (India) Male</option>
+                <option value="hi-IN">Hindi Male</option>
+            </optgroup>
+        </select>
+        
+        <button onclick="speakText()">Speak</button>
+        <button onclick="downloadAudio()">Download</button>
+
+        <audio id="audio" controls style="display: none;"></audio>
+
+        <div class="subscription">
+            <button onclick="subscribe(2)">2 Months - Free</button>
+            <button onclick="subscribe(1)">1 Month - $12</button>
+            <button onclick="subscribe(2)">2 Months - $20</button>
+            <button onclick="subscribe(6)">6 Months - $100</button>
+            <button onclick="subscribe(12)">1 Year - $200</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>Powered by ResponsiveVoice</p>
+    </footer>
+
+    <script>
+        var audio = document.getElementById('audio');
+
+        function speakText() {
+            var text = document.getElementById('textArea').value;
+            var voiceSelect = document.getElementById('voices');
+            var selectedVoice = voiceSelect.value;
+            responsiveVoice.speak(text, selectedVoice, { onstart: showAudio });
+        }
+
+        function showAudio() {
+            audio.style.display = 'block';
+        }
+
+        function downloadAudio() {
+            var text = document.getElementById('textArea').value;
+            var voiceSelect = document.getElementById('voices');
+            var selectedVoice = voiceSelect.value;
+            var audioBlob = responsiveVoice.voiceSynthesis.speak(text, selectedVoice);
+            var url = URL.createObjectURL(audioBlob);
+
+            var downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'speech.mp3';
+            downloadLink.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        function subscribe(months) {
+            var pricing;
+            if (months === 1) {
+                pricing = "$12";
+            } else if (months === 2) {
+                pricing = "$20";
+            } else if (months === 6) {
+                pricing = "$100";
+            } else if (months === 12) {
+                pricing = "$200";
+            } else {
+                pricing = "Free";
+            }
+
+            alert("Subscribed for " + months + " month(s). Pricing: " + pricing);
+            // Add your subscription logic here, e.g., integrate with a payment gateway
+        }
+    </script>
+</body>
+</html>
